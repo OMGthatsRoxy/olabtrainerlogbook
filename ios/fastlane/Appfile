@@ -1,0 +1,15 @@
+# The bundle identifier of your app
+app_identifier("com.example.trainerlogbook")
+
+# Your Apple email address
+apple_id("your-apple-id@example.com")
+
+# Your Apple Developer Team ID
+team_id("YOUR_TEAM_ID")
+
+# Your Apple Developer Team Name
+team_name("YOUR_TEAM_NAME")
+
+# It's recommended to not store the Apple ID password in the repository
+# Instead, you can use the `FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD` environment variable
+# More information: https://docs.fastlane.tools/advanced/#environment-variables

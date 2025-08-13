@@ -181,6 +181,84 @@ export VERCEL_TOKEN=your_token_here
 2. **部署失败**: 确认 VERCEL_TOKEN 是否正确设置
 3. **404 错误**: 检查 `vercel.json` 配置是否正确
 
+## iOS 部署到 TestFlight
+
+本项目支持自动构建iOS应用并上传到TestFlight进行测试分发。
+
+### 配置要求
+
+#### 1. Apple Developer 账户
+- 需要有效的 Apple Developer 账户
+- 在 App Store Connect 中创建应用
+
+#### 2. GitHub Secrets 设置
+
+在 GitHub 仓库设置中添加以下 Secrets：
+
+- **IOS_P12_BASE64**: iOS分发证书的Base64编码
+- **IOS_P12_PASSWORD**: iOS分发证书密码
+- **APPSTORE_ISSUER_ID**: App Store Connect API Issuer ID
+- **APPSTORE_API_KEY_ID**: App Store Connect API Key ID
+- **APPSTORE_API_PRIVATE_KEY**: App Store Connect API Private Key
+- **APPSTORE_CONNECT_USERNAME**: App Store Connect 用户名
+- **APPSTORE_CONNECT_APP_SPECIFIC_PASSWORD**: App Store Connect 应用专用密码
+- **APPSTORE_TEAM_ID**: Apple Developer Team ID
+
+#### 3. 证书和配置文件设置
+
+1. **创建分发证书**：
+   ```bash
+   # 在Xcode中创建分发证书
+   # 或使用命令行
+   security create-keychain -p "password" build.keychain
+   security import certificate.p12 -k build.keychain -P "password" -T /usr/bin/codesign
+   ```
+
+2. **配置Fastlane**：
+   ```bash
+   cd ios
+   gem install fastlane
+   fastlane init
+   # 编辑 fastlane/Appfile 和 fastlane/Fastfile
+   ```
+
+### 部署流程
+
+#### 自动部署
+- 推送代码到 `main` 分支时自动触发构建
+- 创建版本标签时自动上传到TestFlight：
+  ```bash
+  git tag v1.0.0
+  git push origin v1.0.0
+  ```
+
+#### 手动触发
+1. 访问 GitHub 仓库的 Actions 页面
+2. 选择 `build-ios` 工作流
+3. 点击 "Run workflow" 并输入版本信息
+
+#### 本地构建
+```bash
+# 构建iOS应用
+./scripts/build_ios.sh 1.0.0 1
+
+# 使用Fastlane上传到TestFlight
+cd ios
+fastlane beta
+```
+
+### 访问TestFlight
+- 在App Store Connect中查看构建状态
+- 通过TestFlight应用下载测试版本
+- 邀请测试用户进行测试
+
+### 故障排除
+
+1. **证书问题**: 检查证书是否过期，重新生成证书
+2. **配置文件问题**: 确保Bundle ID匹配
+3. **构建失败**: 检查Xcode版本和Flutter兼容性
+4. **上传失败**: 检查App Store Connect API权限
+
 ## 许可证
 
 MIT License

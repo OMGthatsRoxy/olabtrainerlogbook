@@ -1,0 +1,121 @@
+# This file contains the fastlane.tools configuration
+# You can find the documentation at https://docs.fastlane.tools
+#
+# For a list of all available actions, check out
+#
+#     https://docs.fastlane.tools/actions
+#
+# For a list of all available plugins, check out
+#
+#     https://docs.fastlane.tools/plugins/available-plugins
+#
+
+# Uncomment the line if you want fastlane to automatically update itself
+# update_fastlane
+
+default_platform(:ios)
+
+platform :ios do
+  desc "Push a new beta build to TestFlight"
+  lane :beta do
+    # 确保代码是最新的
+    ensure_git_status_clean
+    
+    # 增加构建号
+    increment_build_number(xcodeproj: "Runner.xcodeproj")
+    
+    # 构建应用
+    build_ios_app(
+      workspace: "Runner.xcworkspace",
+      scheme: "Runner",
+      export_method: "app-store",
+      export_options: {
+        method: "app-store",
+        provisioningProfiles: {
+          "com.example.trainerlogbook" => "match AppStore com.example.trainerlogbook"
+        }
+      },
+      output_directory: "build/ios",
+      output_name: "Runner.ipa"
+    )
+    
+    # 上传到TestFlight
+    upload_to_testflight(
+      skip_waiting_for_build_processing: true
+    )
+    
+    # 发送通知
+    slack(
+      message: "Successfully uploaded a new build to TestFlight",
+      slack_url: ENV["SLACK_URL"]
+    )
+  end
+
+  desc "Push a new release build to the App Store"
+  lane :release do
+    # 确保代码是最新的
+    ensure_git_status_clean
+    
+    # 增加版本号
+    increment_version_number(
+      xcodeproj: "Runner.xcodeproj",
+      version_number: ENV["VERSION"]
+    )
+    
+    # 增加构建号
+    increment_build_number(xcodeproj: "Runner.xcodeproj")
+    
+    # 构建应用
+    build_ios_app(
+      workspace: "Runner.xcworkspace",
+      scheme: "Runner",
+      export_method: "app-store",
+      export_options: {
+        method: "app-store",
+        provisioningProfiles: {
+          "com.example.trainerlogbook" => "match AppStore com.example.trainerlogbook"
+        }
+      },
+      output_directory: "build/ios",
+      output_name: "Runner.ipa"
+    )
+    
+    # 上传到App Store Connect
+    upload_to_app_store(
+      force: true,
+      skip_metadata: true,
+      skip_screenshots: true
+    )
+    
+    # 发送通知
+    slack(
+      message: "Successfully uploaded a new release to the App Store",
+      slack_url: ENV["SLACK_URL"]
+    )
+  end
+
+  desc "Build iOS app for development"
+  lane :build do
+    build_ios_app(
+      workspace: "Runner.xcworkspace",
+      scheme: "Runner",
+      export_method: "development",
+      output_directory: "build/ios",
+      output_name: "Runner.ipa"
+    )
+  end
+
+  desc "Setup certificates and provisioning profiles"
+  lane :setup do
+    # 使用match管理证书和配置文件
+    match(
+      type: "development",
+      readonly: true
+    )
+    
+    match(
+      type: "appstore",
+      readonly: true
+    )
+  end
+end
