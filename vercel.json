@@ -6,50 +6,50 @@
       "use": "@vercel/static"
     }
   ],
-  "rewrites": [
+  "routes": [
     {
-      "source": "/assets/(.*)",
-      "destination": "/build/web/assets/$1"
+      "src": "/assets/(.*)",
+      "dest": "/build/web/assets/$1"
     },
     {
-      "source": "/canvaskit/(.*)",
-      "destination": "/build/web/canvaskit/$1"
+      "src": "/canvaskit/(.*)",
+      "dest": "/build/web/canvaskit/$1"
     },
     {
-      "source": "/icons/(.*)",
-      "destination": "/build/web/icons/$1"
+      "src": "/icons/(.*)",
+      "dest": "/build/web/icons/$1"
     },
     {
-      "source": "/manifest.json",
-      "destination": "/build/web/manifest.json"
+      "src": "/manifest.json",
+      "dest": "/build/web/manifest.json"
     },
     {
-      "source": "/favicon.png",
-      "destination": "/build/web/favicon.png"
+      "src": "/favicon.png",
+      "dest": "/build/web/favicon.png"
     },
     {
-      "source": "/version.json",
-      "destination": "/build/web/version.json"
+      "src": "/version.json",
+      "dest": "/build/web/version.json"
     },
     {
-      "source": "/flutter.js",
-      "destination": "/build/web/flutter.js"
+      "src": "/flutter.js",
+      "dest": "/build/web/flutter.js"
     },
     {
-      "source": "/flutter_bootstrap.js",
-      "destination": "/build/web/flutter_bootstrap.js"
+      "src": "/flutter_bootstrap.js",
+      "dest": "/build/web/flutter_bootstrap.js"
     },
     {
-      "source": "/flutter_service_worker.js",
-      "destination": "/build/web/flutter_service_worker.js"
+      "src": "/flutter_service_worker.js",
+      "dest": "/build/web/flutter_service_worker.js"
     },
     {
-      "source": "/main.dart.js",
-      "destination": "/build/web/main.dart.js"
+      "src": "/main.dart.js",
+      "dest": "/build/web/main.dart.js"
     },
     {
-      "source": "/(.*)",
-      "destination": "/build/web/index.html"
+      "src": "/(.*)",
+      "dest": "/build/web/index.html"
     }
   ]
 }

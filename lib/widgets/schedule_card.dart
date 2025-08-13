@@ -155,6 +155,8 @@ class ScheduleCard extends StatelessWidget {
         return Colors.orange;
       case ScheduleStatus.cancelled:
         return Colors.red;
+      case ScheduleStatus.completed:
+        return Colors.blue;
     }
   }
 
@@ -177,6 +179,8 @@ class ScheduleCard extends StatelessWidget {
         return '待确认';
       case ScheduleStatus.cancelled:
         return '已取消';
+      case ScheduleStatus.completed:
+        return '已完成';
     }
   }
 

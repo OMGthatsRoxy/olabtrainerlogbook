@@ -188,7 +188,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Column(
                   children: [
                     const Text(
-                      '健身教练客户管理系统\n与\n排课系统',
+                      '健身教练客户管理 与 排课系统',
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 24,
