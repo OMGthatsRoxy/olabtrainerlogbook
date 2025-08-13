@@ -48,18 +48,8 @@
       "dest": "/build/web/main.dart.js"
     },
     {
-      "src": "/index.html",
-      "dest": "/build/web/index.html"
-    },
-    {
       "src": "/(.*)",
       "dest": "/build/web/index.html"
-    }
-  ],
-  "rewrites": [
-    {
-      "source": "/(.*)",
-      "destination": "/index.html"
     }
   ]
 }
