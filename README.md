@@ -91,6 +91,48 @@ lib/
 - 使用 `flutter devices` 查看可用设备
 - 使用 `flutter logs` 查看应用日志
 
+## 部署说明
+
+### Web部署到Vercel
+
+本项目已配置为支持Vercel部署，包含以下特性：
+- ✅ SPA路由支持（刷新和直达子路由不出现404）
+- ✅ 智能缓存策略
+- ✅ 静态文件优化
+
+#### 部署步骤：
+
+1. **本地打包**
+```bash
+flutter build web --release
+```
+
+2. **部署到Vercel**
+```bash
+vercel --cwd build/web --prod
+```
+
+#### 部署配置说明：
+
+- **构建输出目录**: `build/web`
+- **SPA路由**: 所有请求重写到 `index.html`
+- **缓存策略**:
+  - `index.html`: 不缓存，确保获取最新版本
+  - 静态资源 (`/assets/`, `.js`, `.css`, `.wasm` 等): 长期缓存 (1年)
+
+#### 自动部署：
+
+当您推送代码到GitHub的main分支时，Vercel会自动：
+1. 检测到代码变更
+2. 执行 `flutter build web --release`
+3. 部署到生产环境
+
+#### 访问地址：
+
+部署成功后，您可以通过以下地址访问应用：
+- 主域名: `https://olabtrainerlogbook.vercel.app`
+- 预览域名: `https://olabtrainerlogbook-[hash].vercel.app`
+
 ## 下一步开发计划
 
 - [ ] 实现真实的API接口
@@ -117,4 +159,3 @@ MIT License
 如有问题或建议，请通过以下方式联系：
 - 邮箱：your-email@example.com
 - GitHub Issues：[项目Issues页面]
-# 测试自动部署
