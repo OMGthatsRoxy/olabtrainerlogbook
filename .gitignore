@@ -58,3 +58,15 @@ ui-debug.log
 
 # Vercel
 .vercel
+
+# Android signing keys
+android/app/upload-keystore.jks
+android/key.properties
+*.jks
+*.keystore
+
+# iOS certificates
+ios/*.p12
+ios/*.mobileprovision
+ios/DistributionSummary.plist
+ios/ExportOptions.plist

@@ -259,6 +259,79 @@ fastlane beta
 3. **构建失败**: 检查Xcode版本和Flutter兼容性
 4. **上传失败**: 检查App Store Connect API权限
 
+## Android 部署到 Firebase App Distribution
+
+本项目支持自动构建Android应用并上传到Firebase App Distribution进行测试分发。
+
+### 配置要求
+
+#### 1. Firebase 项目设置
+- 在Firebase Console中创建应用
+- 启用App Distribution功能
+- 创建测试组
+
+#### 2. Android 签名配置
+
+生成签名密钥：
+```bash
+# 生成Android签名密钥
+./scripts/generate_android_key.sh
+
+# 编辑签名配置
+# 修改 android/key.properties 文件中的密码
+```
+
+#### 3. GitHub Secrets 设置
+
+在 GitHub 仓库设置中添加以下 Secrets：
+
+- **ANDROID_KEYSTORE_BASE64**: Android密钥库的Base64编码
+- **ANDROID_KEYSTORE_PASSWORD**: 密钥库密码
+- **ANDROID_KEY_PASSWORD**: 密钥密码
+- **ANDROID_KEY_ALIAS**: 密钥别名（通常是 'upload'）
+- **FIREBASE_APP_ID**: Firebase应用ID
+- **FIREBASE_SERVICE_ACCOUNT_JSON**: Firebase服务账户JSON文件内容
+
+### 部署流程
+
+#### 自动部署
+- 推送代码到 `main` 分支时自动触发构建
+- 创建版本标签时自动上传到Firebase App Distribution：
+  ```bash
+  git tag v1.0.0
+  git push origin v1.0.0
+  ```
+
+#### 手动触发
+1. 访问 GitHub 仓库的 Actions 页面
+2. 选择 `build-android` 工作流
+3. 点击 "Run workflow" 并输入版本信息
+
+#### 本地构建
+```bash
+# 构建Android应用
+./scripts/build_android.sh 1.0.0 1
+
+# 安装到设备
+adb install build/app/outputs/flutter-apk/app-release.apk
+
+# 上传到Firebase App Distribution
+firebase appdistribution:distribute build/app/outputs/flutter-apk/app-release.apk \
+  --app $FIREBASE_APP_ID --groups testers
+```
+
+### 访问Firebase App Distribution
+- 在Firebase Console中查看构建状态
+- 通过Firebase App Distribution应用下载测试版本
+- 邀请测试用户进行测试
+
+### 故障排除
+
+1. **签名问题**: 检查密钥库文件和密码是否正确
+2. **构建失败**: 检查Android SDK和Gradle配置
+3. **上传失败**: 检查Firebase项目配置和权限
+4. **权限问题**: 确保Firebase服务账户有足够权限
+
 ## 许可证
 
 MIT License
