@@ -184,20 +184,26 @@ class _HomeScreenState extends State<HomeScreen> {
             children: [
               const SizedBox(height: 20), // 增加顶部间距
               // 标题
-              const Text(
-                '健身教练客户管理 与 排课系统',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
+              Center(
+                child: Column(
+                  children: [
+                    const Text(
+                      '健身教练客户管理系统\n与\n排课系统',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 8),
+                    const Text(
+                      '高效管理客户、配套与课程,助力教练提升服务',
+                      style: TextStyle(color: Colors.grey, fontSize: 14),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
                 ),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 8),
-              const Text(
-                '高效管理客户、配套与课程,助力教练提升服务',
-                style: TextStyle(color: Colors.grey, fontSize: 14),
-                textAlign: TextAlign.center,
               ),
               const SizedBox(height: 24),
 
