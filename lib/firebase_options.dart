@@ -41,7 +41,7 @@ class DefaultFirebaseOptions {
   }
 
   // Firebase配置 - 从GoogleService-Info.plist获取的真实配置
-  
+
   static const FirebaseOptions web = FirebaseOptions(
     apiKey: 'AIzaSyCibaFjlPVFArgWh-dYeW33NZ7zOUHH1rk',
     appId: '1:742358725365:web:7a45ba60ed1de60faf8bbc',

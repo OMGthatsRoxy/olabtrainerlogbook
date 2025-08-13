@@ -3,10 +3,12 @@
   "version": "1.0.0",
   "description": "健身教练客户管理系统",
   "scripts": {
-    "build": "flutter build web --release",
-    "vercel-build": "flutter build web --release"
+    "build": "./build.sh",
+    "vercel-build": "./build.sh",
+    "postinstall": "flutter pub get"
   },
   "engines": {
     "node": ">=18.0.0"
-  }
+  },
+  "dependencies": {}
 }
