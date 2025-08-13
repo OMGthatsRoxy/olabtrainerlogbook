@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "742358725365",
+    "project_id": "ftrainerlogbook",
+    "storage_bucket": "ftrainerlogbook.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:742358725365:android:58e6155d997daca4af8bbc",
+        "android_client_info": {
+          "package_name": "com.example.trainerlogbook"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC8kWFkZf_pd9W0Zmp7_yHfBv1b5mhGCHA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
