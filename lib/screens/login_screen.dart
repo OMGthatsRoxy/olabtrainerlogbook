@@ -34,7 +34,7 @@ class _LoginScreenState extends State<LoginScreen> {
     try {
       final authService = Provider.of<AuthService>(context, listen: false);
       Map<String, dynamic> result;
-      
+
       if (_isLoginMode) {
         result = await authService.login(
           _emailController.text,
@@ -74,6 +74,52 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
+  Future<void> _handleGoogleSignIn() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      final authService = Provider.of<AuthService>(context, listen: false);
+      final result = await authService.signInWithGoogle();
+
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+
+        if (result['success']) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(result['message']),
+              backgroundColor: Colors.green,
+            ),
+          );
+          Navigator.pushReplacementNamed(context, '/home');
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(result['message']),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Google登录失败: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
+  }
+
   void _toggleAuthMode() {
     setState(() {
       _isLoginMode = !_isLoginMode;
@@ -89,10 +135,7 @@ class _LoginScreenState extends State<LoginScreen> {
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [
-              Color(0xFF667eea),
-              Color(0xFF764ba2),
-            ],
+            colors: [Color(0xFF667eea), Color(0xFF764ba2)],
           ),
         ),
         child: SafeArea(
@@ -158,7 +201,9 @@ class _LoginScreenState extends State<LoginScreen> {
                             if (value == null || value.isEmpty) {
                               return '请输入邮箱';
                             }
-                            if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
+                            if (!RegExp(
+                              r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
+                            ).hasMatch(value)) {
                               return '请输入有效的邮箱地址';
                             }
                             return null;
@@ -242,6 +287,56 @@ class _LoginScreenState extends State<LoginScreen> {
                                   ),
                           ),
                         ),
+                        const SizedBox(height: 20),
+
+                        // 分割线
+                        Row(
+                          children: [
+                            const Expanded(child: Divider()),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                              ),
+                              child: Text(
+                                '或',
+                                style: TextStyle(
+                                  color: Colors.grey[600],
+                                  fontSize: 14,
+                                ),
+                              ),
+                            ),
+                            const Expanded(child: Divider()),
+                          ],
+                        ),
+
+                        const SizedBox(height: 20),
+
+                        // Google登录按钮
+                        SizedBox(
+                          width: double.infinity,
+                          height: 50,
+                          child: OutlinedButton.icon(
+                            onPressed: _isLoading ? null : _handleGoogleSignIn,
+                            icon: const Icon(
+                              Icons.g_mobiledata,
+                              size: 24,
+                              color: Colors.red,
+                            ),
+                            label: const Text(
+                              '使用Google账号登录',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            style: OutlinedButton.styleFrom(
+                              side: BorderSide(color: Colors.grey[400]!),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                            ),
+                          ),
+                        ),
                         const SizedBox(height: 16),
 
                         // 切换登录/注册模式
@@ -272,16 +367,12 @@ class _LoginScreenState extends State<LoginScreen> {
                             onPressed: () {
                               // TODO: 实现忘记密码功能
                               ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text('忘记密码功能开发中...'),
-                                ),
+                                const SnackBar(content: Text('忘记密码功能开发中...')),
                               );
                             },
                             child: const Text(
                               '忘记密码？',
-                              style: TextStyle(
-                                color: Color(0xFF667eea),
-                              ),
+                              style: TextStyle(color: Color(0xFF667eea)),
                             ),
                           ),
                         ],
@@ -297,4 +388,3 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 }
-

@@ -64,6 +64,9 @@ dependencies:
   
   # Firebase分析
   firebase_analytics: ^11.3.3
+  
+  # Google登录
+  google_sign_in: ^6.2.1
 
 dev_dependencies:
   flutter_test:

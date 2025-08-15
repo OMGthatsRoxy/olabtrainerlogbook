@@ -1,8 +1,11 @@
 import 'package:flutter/foundation.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthService extends ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final GoogleSignIn _googleSignIn = GoogleSignIn();
+
   User? get currentUser => _auth.currentUser;
   bool get isLoggedIn => _auth.currentUser != null;
   String? get token => _auth.currentUser?.uid;
@@ -79,6 +82,69 @@ class AuthService extends ChangeNotifier {
     } catch (e) {
       debugPrint('注册过程中出错: $e');
       return {'success': false, 'message': '注册过程中出错: $e'};
+    }
+  }
+
+  // 添加Google登录方法
+  Future<Map<String, dynamic>> signInWithGoogle() async {
+    try {
+      // 触发Google登录流程
+      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+
+      if (googleUser == null) {
+        return {'success': false, 'message': '用户取消了Google登录'};
+      }
+
+      // 获取Google认证信息
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
+
+      // 创建Firebase认证凭据
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      // 使用Firebase进行认证
+      final UserCredential userCredential = await _auth.signInWithCredential(
+        credential,
+      );
+
+      debugPrint('Google用户 ${userCredential.user?.email} 登录成功');
+      return {
+        'success': true,
+        'message': 'Google登录成功',
+        'user': userCredential.user,
+      };
+    } on FirebaseAuthException catch (e) {
+      String errorMessage = 'Google登录失败';
+      switch (e.code) {
+        case 'account-exists-with-different-credential':
+          errorMessage = '该邮箱已被其他方式注册';
+          break;
+        case 'invalid-credential':
+          errorMessage = '无效的认证凭据';
+          break;
+        case 'operation-not-allowed':
+          errorMessage = 'Google登录功能未启用';
+          break;
+        case 'user-disabled':
+          errorMessage = '账户已被禁用';
+          break;
+        case 'user-not-found':
+          errorMessage = '用户不存在';
+          break;
+        case 'network-request-failed':
+          errorMessage = '网络连接失败';
+          break;
+        default:
+          errorMessage = 'Google登录失败: ${e.message}';
+      }
+      debugPrint('Google登录失败: ${e.code} - ${e.message}');
+      return {'success': false, 'message': errorMessage, 'code': e.code};
+    } catch (e) {
+      debugPrint('Google登录过程中出错: $e');
+      return {'success': false, 'message': 'Google登录过程中出错: $e'};
     }
   }
 
@@ -168,7 +234,9 @@ class AuthService extends ChangeNotifier {
     }
   }
 
+  // 登出时同时登出Google
   Future<void> logout() async {
+    await _googleSignIn.signOut();
     await _auth.signOut();
     debugPrint('用户已登出');
   }
